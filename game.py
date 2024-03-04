@@ -19,6 +19,9 @@ def playerInput(board):
     if board[pos - 1] == "-":
         board[pos - 1] = currentPlayer
         printBoard(board)
+        checkWin.checkWin(board)
+        switchPlayer()
+
     elif board[pos - 1] != "-":
         print("Oops! That spot is already taken by a player. Try again.")
         playerInput(board)
@@ -30,13 +33,16 @@ def printBoard(board):
     print(f"{board[6]}  |  {board[7]}  |  {board[8]}\n")
 
 def computerPlay(board):
-    pos = random.randint(0, 8)
-    if board[pos] == "-":
-        board[pos] = currentPlayer
-        print("Computer thinking: ...aha!")
-        printBoard(board)
-    else:
-        computerPlay(board)
+    while currentPlayer != player:
+        pos = random.randint(0, 8)
+        if board[pos] == "-":
+            board[pos] = currentPlayer
+            print("Computer thinking: ...aha!")
+            printBoard(board)
+            checkWin.checkWin(board)
+            switchPlayer()
+        else:
+            computerPlay(board)
 
 def switchPlayer():
     global currentPlayer
@@ -83,11 +89,6 @@ printBoard(board)
 
 while gameRunning:
     playerInput(board)
-    checkWin.checkWin(board)
-
     if gameRunning:
-        switchPlayer()
         computerPlay(board)
-        checkWin.checkWin(board)
-        switchPlayer()
         
