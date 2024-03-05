@@ -1,8 +1,10 @@
 import random
 
-board = ["-", "-", "-",
-         "-", "-", "-",
-         "-", "-", "-"]
+board = {
+    1: "-", 2: "-", 3: "-",
+    4: "-", 5: "-", 6: "-",
+    7: "-", 8: "-", 9: "-"
+}
 
 currentPlayer = "x"
 gameRunning = True
@@ -16,25 +18,25 @@ def playerInput(board):
         print("Enter a valid number.")
         playerInput(board)
         
-    if board[pos - 1] == "-":
-        board[pos - 1] = currentPlayer
+    if board[pos] == "-":
+        board[pos] = currentPlayer
         printBoard(board)
         checkWin.checkWin(board)
         switchPlayer()
 
-    elif board[pos - 1] != "-":
+    elif board[pos] != "-":
         print("Oops! That spot is already taken by a player. Try again.")
         playerInput(board)
 
 
 def printBoard(board):
-    print(f"{board[0]}  |  {board[1]}  |  {board[2]}")
-    print(f"{board[3]}  |  {board[4]}  |  {board[5]}")
-    print(f"{board[6]}  |  {board[7]}  |  {board[8]}\n")
+    print(f"{board[1]}  |  {board[2]}  |  {board[3]}")
+    print(f"{board[4]}  |  {board[5]}  |  {board[6]}")
+    print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
 def computerPlay(board):
     while currentPlayer != player:
-        pos = random.randint(0, 8)
+        pos = random.randint(1, 9)
         if board[pos] == "-":
             board[pos] = currentPlayer
             print("Computer thinking: ...aha!")
@@ -60,7 +62,7 @@ class checkWin:
 
     def checkRow(board):
         # if board[0] == currentPlayer and board[1] == currentPlayer and board[2] == currentPlayer or board[3] == currentPlayer and board[4] == currentPlayer and board[5] == currentPlayer or board[6] == currentPlayer and board[7] == currentPlayer and board[8] == currentPlayer:
-        for i in range(0, 6, 3):
+        for i in range(1, 7, 3):
             if all(board[i + j] == currentPlayer for j in range(3)): 
                 return True
 
@@ -70,8 +72,8 @@ class checkWin:
                 return True
     
     def checkDiagonal(board):
-        if (board[0] == board[4] == board[8] == currentPlayer) or \
-           (board[2] == board[4] == board[6] == currentPlayer):
+        if (board[1] == board[5] == board[9] == currentPlayer) or \
+           (board[3] == board[5] == board[7] == currentPlayer):
             return True
     
     def checkWin(board):
