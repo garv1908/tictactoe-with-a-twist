@@ -67,7 +67,7 @@ class checkWin:
                 return True
 
     def checkColumn(board):
-        for i in range(3):
+        for i in range(1, 4):
             if all(board[i + j*3] == currentPlayer for j in range(3)): 
                 return True
     
