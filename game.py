@@ -35,6 +35,17 @@ def printBoard(board):
     print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
 def computerPlay(board):
+    """A player can play a perfect game of tic-tac-toe (to win or at least draw) if, each time it is their turn to play, they choose the first available move from the following list, as used in Newell and Simon's 1972 tic-tac-toe program.[19]
+
+    Win: If the player has two in a row, they can place a third to get three in a row.
+    Block: If the opponent has two in a row, the player must play the third themselves to block the opponent.
+    Fork: Cause a scenario where the player has two ways to win (two non-blocked lines of 2).
+    Blocking an opponent's fork: If there is only one possible fork for the opponent, the player should block it. Otherwise, the player should block all forks in any way that simultaneously allows them to make two in a row. Otherwise, the player should make a two in a row to force the opponent into defending, as long as it does not result in them producing a fork. For example, if "X" has two opposite corners and "O" has the center, "O" must not play a corner move to win. (Playing a corner move in this scenario produces a fork for "X" to win.)
+    Center: A player marks the center. (If it is the first move of the game, playing a corner move gives the second player more opportunities to make a mistake and may therefore be the better choice; however, it makes no difference between perfect players.)
+    Opposite corner: If the opponent is in the corner, the player plays the opposite corner.
+    Empty corner: The player plays in a corner square.
+    Empty side: The player plays in a middle square on any of the four sides.
+            Source: Wikipedia"""
     while currentPlayer != player:
         pos = random.randint(1, 9)
         if board[pos] == "-":
@@ -46,6 +57,9 @@ def computerPlay(board):
         else:
             computerPlay(board)
 
+
+            
+
 def switchPlayer():
     global currentPlayer
     if currentPlayer == "x":
@@ -56,13 +70,12 @@ def switchPlayer():
 class checkWin:
     def checkTie(board):
         global gameRunning
-        if "-" not in board:
-            print("It's a draw!")
-            gameRunning = False
+        if all(board[i] != "-" for i in range(1,10)):
+            return True
 
     def checkRow(board):
         # if board[0] == currentPlayer and board[1] == currentPlayer and board[2] == currentPlayer or board[3] == currentPlayer and board[4] == currentPlayer and board[5] == currentPlayer or board[6] == currentPlayer and board[7] == currentPlayer and board[8] == currentPlayer:
-        for i in range(1, 7, 3):
+        for i in range(1, 8, 3):
             if all(board[i + j] == currentPlayer for j in range(3)): 
                 return True
 
@@ -83,7 +96,9 @@ class checkWin:
             print(f"{currentPlayer.capitalize()} wins!")
             gameRunning = False
         elif checkWin.checkTie(board):
-            if currentPlayer != player:
+            print("It's a draw!")
+            gameRunning = False
+        elif currentPlayer != player:
                 print("Your turn now, dear human.")
 
 
