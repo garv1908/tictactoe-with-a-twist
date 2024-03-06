@@ -63,22 +63,22 @@ class ComputerPlay:
                 x = row
                 y = row + 1
                 z = row + 2
-                ComputerPlay.checkThree(x, y, z)
+                ComputerPlay.Win.checkThree(x, y, z)
 
         def winCol():
             for column in range(1, 4):
                 x = column
                 y = column + 3
                 z = column + 6
-                ComputerPlay.checkThree(x, y, z)
+                ComputerPlay.Win.checkThree(x, y, z)
 
         def winDiag():
             # diagonal 1
             x, y, z = 1, 5, 9
-            ComputerPlay.checkThree(x, y, z)
+            ComputerPlay.Win.checkThree(x, y, z)
             # diagonal2
             x, y, z = 3, 5, 7
-            ComputerPlay.checkThree(x, y, z)
+            ComputerPlay.Win.checkThree(x, y, z)
 
     def play(self):
         global pos
