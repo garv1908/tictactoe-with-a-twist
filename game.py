@@ -21,7 +21,7 @@ def playerInput(board):
     if board[pos] == "-":
         board[pos] = currentPlayer
         printBoard(board)
-        checkWin.checkWin(board)
+        CheckWin.checkWin(board)
         switchPlayer()
 
     elif board[pos] != "-":
@@ -34,7 +34,8 @@ def printBoard(board):
     print(f"{board[4]}  |  {board[5]}  |  {board[6]}")
     print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
-def computerPlay(board):
+class ComputerPlay:
+    
     """A player can play a perfect game of tic-tac-toe (to win or at least draw) if, each time it is their turn to play, they choose the first available move from the following list, as used in Newell and Simon's 1972 tic-tac-toe program.[19]
 
     Win: If the player has two in a row, they can place a third to get three in a row.
@@ -46,19 +47,51 @@ def computerPlay(board):
     Empty corner: The player plays in a corner square.
     Empty side: The player plays in a middle square on any of the four sides.
             Source: Wikipedia"""
-    while currentPlayer != player:
-        pos = random.randint(1, 9)
-        if board[pos] == "-":
-            board[pos] = currentPlayer
-            print("Computer thinking: ...aha!")
-            printBoard(board)
-            checkWin.checkWin(board)
-            switchPlayer()
-        else:
-            computerPlay(board)
+    class Win:
+        def checkThree(x, y, z):
+            if ((board[x] and board[y]) or (board[y] and board[z]) or (board[x] and board[z]))\
+                and (board[x] or board[y] or board[z]) == "-":
+                empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
+                pos = empty_index # sets pos to winning cell
+
+        def winRow():
+            for row in range(1, 8, 3):
+                x = row
+                y = row + 1
+                z = row + 2
+                ComputerPlay.checkThree(x, y, z)
+
+        def winCol():
+            for column in range(1, 4):
+                x = column
+                y = column + 3
+                z = column + 6
+                ComputerPlay.checkThree(x, y, z)
+
+        def winDiag():
+            # diagonal 1
+            x, y, z = 1, 5, 9
+            ComputerPlay.checkThree(x, y, z)
+            # diagonal2
+            x, y, z = 3, 5, 7
+            ComputerPlay.checkThree(x, y, z)
 
 
+
+
+    def computerPlay(board):
+        while currentPlayer != player:
             
+            # pos = random.randint(1, 9)
+            if board[pos] == "-":
+                board[pos] = currentPlayer
+                print("Computer thinking: ...aha!")
+                printBoard(board)
+                CheckWin.checkWin(board)
+                switchPlayer()
+            else:
+                ComputerPlay.computerPlay(board)
+                
 
 def switchPlayer():
     global currentPlayer
@@ -67,7 +100,7 @@ def switchPlayer():
     else:
         currentPlayer = "x"
 
-class checkWin:
+class CheckWin:
     def checkTie(board):
         global gameRunning
         if all(board[i] != "-" for i in range(1,10)):
@@ -92,10 +125,10 @@ class checkWin:
     def checkWin(board):
         global player
         global gameRunning
-        if checkWin.checkRow(board) or checkWin.checkColumn(board) or checkWin.checkDiagonal(board):
+        if CheckWin.checkRow(board) or CheckWin.checkColumn(board) or CheckWin.checkDiagonal(board):
             print(f"{currentPlayer.capitalize()} wins!")
             gameRunning = False
-        elif checkWin.checkTie(board):
+        elif CheckWin.checkTie(board):
             print("It's a draw!")
             gameRunning = False
         elif currentPlayer != player:
