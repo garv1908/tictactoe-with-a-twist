@@ -11,6 +11,7 @@ gameRunning = True
 winner = None
 player = "x"
 
+
 def playerInput(board):
     try:
         pos = int(input("What spot on the board would you like to play? (1-9): "))
@@ -35,7 +36,10 @@ def printBoard(board):
     print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
 class ComputerPlay:
-    
+    def __init__(self, board):
+        self.board = board
+        self.win = self.Win()
+
     """A player can play a perfect game of tic-tac-toe (to win or at least draw) if, each time it is their turn to play, they choose the first available move from the following list, as used in Newell and Simon's 1972 tic-tac-toe program.[19]
 
     Win: If the player has two in a row, they can place a third to get three in a row.
@@ -76,13 +80,19 @@ class ComputerPlay:
             x, y, z = 3, 5, 7
             ComputerPlay.checkThree(x, y, z)
 
+    def play(self):
+        global pos
+        pos = None
+        computer = ComputerPlay(board).Win
+        computer.winRow()
+        computer.winCol()
+        computer.winDiag()
 
-
-
-    def computerPlay(board):
         while currentPlayer != player:
-            
-            # pos = random.randint(1, 9)
+            if pos == None:
+                pos = random.randint(1, 9)
+
+
             if board[pos] == "-":
                 board[pos] = currentPlayer
                 print("Computer thinking: ...aha!")
@@ -90,7 +100,7 @@ class ComputerPlay:
                 CheckWin.checkWin(board)
                 switchPlayer()
             else:
-                ComputerPlay.computerPlay(board)
+                ComputerPlay(board).play()
                 
 
 def switchPlayer():
@@ -140,5 +150,5 @@ printBoard(board)
 while gameRunning:
     playerInput(board)
     if gameRunning:
-        computerPlay(board)
+       ComputerPlay(board).play()
         
