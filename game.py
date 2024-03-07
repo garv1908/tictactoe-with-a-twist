@@ -10,6 +10,7 @@ currentPlayer = "x"
 gameRunning = True
 winner = None
 player = "x"
+opponent = "o"
 global pos
 
 def playerInput(board):
@@ -53,41 +54,47 @@ class ComputerPlay:
     Empty side: The player plays in a middle square on any of the four sides.
             Source: Wikipedia"""
     class Win:
-        def checkThree(x, y, z):
+        def checkThree(x, y, z, who): # 'who' checks for either 'x' or 'o'
             global pos
-            if ((((board[x] == currentPlayer and board[y] == currentPlayer) or (board[y] == currentPlayer and board[z] == currentPlayer) or (board[x] == currentPlayer and board[z] == currentPlayer)))\
+            if ((((board[x] == who and board[y] == who) or (board[y] == who and board[z] == who) or (board[x] == who and board[z] == who)))\
                 and ((board[x] == "-" or board[y] == "-" or board[z] == "-"))):
                 empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
                 pos = empty_index # sets pos to winning cell
-        def winRow():
+        def winRow(XorO):
             for row in range(1, 8, 3):
                 x = row
                 y = row + 1
                 z = row + 2
-                ComputerPlay.Win.checkThree(x, y, z)
+                ComputerPlay.Win.checkThree(x, y, z, XorO)
 
-        def winCol():
+        def winCol(XorO):
             for column in range(1, 4):
                 x = column
                 y = column + 3
                 z = column + 6
-                ComputerPlay.Win.checkThree(x, y, z)
+                ComputerPlay.Win.checkThree(x, y, z, XorO)
 
-        def winDiag():
+        def winDiag(XorO):
             # diagonal 1
             x, y, z = 1, 5, 9
-            ComputerPlay.Win.checkThree(x, y, z)
+            ComputerPlay.Win.checkThree(x, y, z, XorO)
+
             # diagonal2
             x, y, z = 3, 5, 7
-            ComputerPlay.Win.checkThree(x, y, z)
+            ComputerPlay.Win.checkThree(x, y, z, XorO)
+    class Block:
+        def checkThree():
+            ComputerPlay.Win.checkThree(x, y, z, player)
+        def play():
+            pass
 
     def play(self):
         global pos
         pos = -1
         computer = ComputerPlay(board).Win
-        computer.winRow()
-        computer.winCol()
-        computer.winDiag()
+        computer.winRow(currentPlayer)
+        computer.winCol(currentPlayer)
+        computer.winDiag(currentPlayer)
         ComputerPlay(board).playMove()
             
     def playMove(self):
