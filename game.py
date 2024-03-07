@@ -82,34 +82,50 @@ class ComputerPlay:
             # diagonal2
             x, y, z = 3, 5, 7
             ComputerPlay.Win.checkThree(x, y, z, XorO)
+        def play():
+            computer = ComputerPlay(board).Win
+            computer.winRow(currentPlayer)
+            computer.winCol(currentPlayer)
+            computer.winDiag(currentPlayer)
     class Block:
         def checkThree():
-            ComputerPlay.Win.checkThree(x, y, z, player)
+            global pos
+            pos = -1
+            computer = ComputerPlay.Win
+            # below lines set pos variable to what is needed to play to block player
+            computer.winRow(player)
+            computer.winCol(player)
+            computer.winDiag(player)
         def play():
             pass
 
     def play(self):
         global pos
         pos = -1
-        computer = ComputerPlay(board).Win
-        computer.winRow(currentPlayer)
-        computer.winCol(currentPlayer)
-        computer.winDiag(currentPlayer)
-        ComputerPlay(board).playMove()
+        while pos == -1:
+            ComputerPlay.Win.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+            ComputerPlay(board).Block.checkThree()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+            ComputerPlay(board).playMove()
+
             
     def playMove(self):
         global pos
-        while currentPlayer != player:
-            if pos == -1 or board[pos] != "-":
-                pos = random.randint(1, 9)
-            if board[pos] == "-":
-                board[pos] = currentPlayer
-                print("Computer thinking: ...aha!")
-                printBoard(board)
-                CheckWin.checkWin(board)
-                switchPlayer()
-            else:
-                ComputerPlay(board).playMove()
+        if pos == -1 or board[pos] != "-":
+            pos = random.randint(1, 9)
+        if board[pos] == "-":
+            board[pos] = currentPlayer
+            print("Computer thinking: ...aha!")
+            printBoard(board)
+            CheckWin.checkWin(board)
+            switchPlayer()
+        else:
+            ComputerPlay(board).playMove()
 
 def switchPlayer():
     global currentPlayer
