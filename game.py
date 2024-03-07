@@ -10,7 +10,7 @@ currentPlayer = "x"
 gameRunning = True
 winner = None
 player = "x"
-
+global pos
 
 def playerInput(board):
     try:
@@ -36,6 +36,7 @@ def printBoard(board):
     print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
 class ComputerPlay:
+    
     def __init__(self, board):
         self.board = board
         self.win = self.Win()
@@ -53,11 +54,11 @@ class ComputerPlay:
             Source: Wikipedia"""
     class Win:
         def checkThree(x, y, z):
-            if ((board[x] and board[y]) or (board[y] and board[z]) or (board[x] and board[z]))\
-                and (board[x] or board[y] or board[z]) == "-":
+            global pos
+            if ((((board[x] == currentPlayer and board[y] == currentPlayer) or (board[y] == currentPlayer and board[z] == currentPlayer) or (board[x] == currentPlayer and board[z] == currentPlayer)))\
+                and ((board[x] == "-" or board[y] == "-" or board[z] == "-"))):
                 empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
                 pos = empty_index # sets pos to winning cell
-
         def winRow():
             for row in range(1, 8, 3):
                 x = row
@@ -82,17 +83,18 @@ class ComputerPlay:
 
     def play(self):
         global pos
-        pos = None
+        pos = -1
         computer = ComputerPlay(board).Win
         computer.winRow()
         computer.winCol()
         computer.winDiag()
-
+        ComputerPlay(board).playMove()
+            
+    def playMove(self):
+        global pos
         while currentPlayer != player:
-            if pos == None:
+            if pos == -1 or board[pos] != "-":
                 pos = random.randint(1, 9)
-
-
             if board[pos] == "-":
                 board[pos] = currentPlayer
                 print("Computer thinking: ...aha!")
@@ -100,8 +102,7 @@ class ComputerPlay:
                 CheckWin.checkWin(board)
                 switchPlayer()
             else:
-                ComputerPlay(board).play()
-                
+                ComputerPlay(board).playMove()
 
 def switchPlayer():
     global currentPlayer
