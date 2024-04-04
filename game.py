@@ -13,6 +13,12 @@ player = "x"
 opponent = "o"
 global pos
 
+"""
+takes player input, with a validation check.
+assigns move in array
+checks for win
+switches player
+"""
 def playerInput(board):
     try:
         pos = int(input("What spot on the board would you like to play? (1-9): "))
@@ -30,12 +36,17 @@ def playerInput(board):
         print("Oops! That spot is already taken by a player. Try again.")
         playerInput(board)
 
-
+"""
+prints the board
+"""
 def printBoard(board):
     print(f"{board[1]}  |  {board[2]}  |  {board[3]}")
     print(f"{board[4]}  |  {board[5]}  |  {board[6]}")
     print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
 
+"""
+class initalised with self 
+"""
 class ComputerPlay:
     
     def __init__(self, board):
@@ -53,13 +64,22 @@ class ComputerPlay:
     Empty corner: The player plays in a corner square.
     Empty side: The player plays in a middle square on any of the four sides.
             Source: Wikipedia"""
+    
+    
     class Win:
+        """
+        checkThree takes in 3 positions x, y, z, and who -> who are we checking for
+        the three positions are checked for a win, and sets pos to the empty cell, if found.
+        """
         def checkThree(x, y, z, who): # 'who' checks for either 'x' or 'o'
             global pos
             if ((((board[x] == who and board[y] == who) or (board[y] == who and board[z] == who) or (board[x] == who and board[z] == who)))\
                 and ((board[x] == "-" or board[y] == "-" or board[z] == "-"))):
                 empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
                 pos = empty_index # sets pos to winning cell
+        """
+        checks each row for win
+        """
         def winRow(XorO):
             for row in range(1, 8, 3):
                 x = row
@@ -67,13 +87,19 @@ class ComputerPlay:
                 z = row + 2
                 ComputerPlay.Win.checkThree(x, y, z, XorO)
 
+        """
+        checks each column for win
+        """
         def winCol(XorO):
             for column in range(1, 4):
                 x = column
                 y = column + 3
                 z = column + 6
                 ComputerPlay.Win.checkThree(x, y, z, XorO)
-
+        
+        """
+        checks each diagonal for win
+        """
         def winDiag(XorO):
             # diagonal 1
             x, y, z = 1, 5, 9
@@ -82,11 +108,20 @@ class ComputerPlay:
             # diagonal2
             x, y, z = 3, 5, 7
             ComputerPlay.Win.checkThree(x, y, z, XorO)
+
+        """
+        checks each row, then each column, then each diagonal.
+        as per checkThree, it assigns pos to the winning move if available
+        """
         def play():
             computer = ComputerPlay(board).Win
             computer.winRow(currentPlayer)
             computer.winCol(currentPlayer)
             computer.winDiag(currentPlayer)
+
+    """
+    Block class contains checkThree
+    """
     class Block:
         def checkThree():
             global pos
@@ -97,6 +132,9 @@ class ComputerPlay:
             computer.winCol(player)
             computer.winDiag(player)
         def play():
+            pass
+    class Fork:
+        def checkFork():
             pass
 
     def play(self):
@@ -113,7 +151,10 @@ class ComputerPlay:
                 break
             ComputerPlay(board).playMove()
 
-            
+    """
+    playMove handles the actual mechanics of the computer playing a move
+    direct function of the ComputerPlay class
+    """
     def playMove(self):
         global pos
         if pos == -1 or board[pos] != "-":
@@ -135,27 +176,28 @@ def switchPlayer():
         currentPlayer = "x"
 
 class CheckWin:
-    def checkTie(board):
-        global gameRunning
-        if all(board[i] != "-" for i in range(1,10)):
-            return True
 
-    def checkRow(board):
+    def checkRow(board) -> bool:
         # if board[0] == currentPlayer and board[1] == currentPlayer and board[2] == currentPlayer or board[3] == currentPlayer and board[4] == currentPlayer and board[5] == currentPlayer or board[6] == currentPlayer and board[7] == currentPlayer and board[8] == currentPlayer:
         for i in range(1, 8, 3):
             if all(board[i + j] == currentPlayer for j in range(3)): 
                 return True
 
-    def checkColumn(board):
+    def checkColumn(board) -> bool:
         for i in range(1, 4):
             if all(board[i + j*3] == currentPlayer for j in range(3)): 
                 return True
     
-    def checkDiagonal(board):
+    def checkDiagonal(board) -> bool:
         if (board[1] == board[5] == board[9] == currentPlayer) or \
            (board[3] == board[5] == board[7] == currentPlayer):
             return True
     
+    def checkTie(board) -> bool:
+        global gameRunning
+        if all(board[i] != "-" for i in range(1,10)):
+            return True
+        
     def checkWin(board):
         global player
         global gameRunning
@@ -167,7 +209,6 @@ class CheckWin:
             gameRunning = False
         elif currentPlayer != player:
                 print("Your turn now, dear human.")
-
 
 printBoard(board)
 
