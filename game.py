@@ -22,19 +22,18 @@ switches player
 def playerInput(board):
     try:
         pos = int(input("What spot on the board would you like to play? (1-9): "))
+        if board[pos] == "-":
+            board[pos] = currentPlayer
+            printBoard(board)
+            CheckWin.checkWin(board)
+            switchPlayer()
+        elif board[pos] != "-":
+            print("Oops! That spot is already taken by a player. Try again.")
+            playerInput(board)
     except:
         print("Enter a valid number.")
         playerInput(board)
         
-    if board[pos] == "-":
-        board[pos] = currentPlayer
-        printBoard(board)
-        CheckWin.checkWin(board)
-        switchPlayer()
-
-    elif board[pos] != "-":
-        print("Oops! That spot is already taken by a player. Try again.")
-        playerInput(board)
 
 """
 prints the board
