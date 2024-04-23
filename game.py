@@ -11,6 +11,7 @@ gameRunning = True
 winner = None
 player = "x"
 opponent = "o"
+
 global pos
 
 """
@@ -19,7 +20,7 @@ assigns move in array
 checks for win
 switches player
 """
-def playerInput(board):
+def playerInput(board: dict):
     try:
         pos = int(input("What spot on the board would you like to play? (1-9): "))
         if board[pos] == "-":
@@ -32,7 +33,7 @@ def playerInput(board):
             playerInput(board)
     except:
         print("Enter a valid number.")
-        playerInput(board)
+        playerInput(board) # call recursively
         
 
 """
@@ -90,7 +91,7 @@ class ComputerPlay:
         checks each column for win
         """
         def winCol(XorO):
-            for column in range(1, 4):
+            for column in range(1, 4): # column values: 1, 2, 3
                 x = column
                 y = column + 3
                 z = column + 6
@@ -104,7 +105,7 @@ class ComputerPlay:
             x, y, z = 1, 5, 9
             ComputerPlay.Win.checkThree(x, y, z, XorO)
 
-            # diagonal2
+            # diagonal 2
             x, y, z = 3, 5, 7
             ComputerPlay.Win.checkThree(x, y, z, XorO)
 
@@ -153,11 +154,13 @@ class ComputerPlay:
     """
     playMove handles the actual mechanics of the computer playing a move
     direct function of the ComputerPlay class
+    checks 
     """
     def playMove(self):
         global pos
         if pos == -1 or board[pos] != "-":
             pos = random.randint(1, 9)
+            print("didn't know what to play for perfecition. generated random pos")
         if board[pos] == "-":
             board[pos] = currentPlayer
             print("Computer thinking: ...aha!")
