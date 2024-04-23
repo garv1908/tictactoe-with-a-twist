@@ -68,13 +68,13 @@ class ComputerPlay:
     Empty corner: The player plays in a corner square.
     Empty side: The player plays in a middle square on any of the four sides.
             Source: Wikipedia"""
-    
+
     class Win:
         """
         checkThree takes in 3 positions x, y, z, and who -> who are we checking for
         the three positions are checked for a win, and sets pos to the empty cell, if found.
         """
-        def checkThree(x, y, z, who): # 'who' checks for either 'x' or 'o'
+        def checkThree(x: int, y: int, z: int, who: str): # 'who' checks for either 'x' or 'o'
             global pos
             if ((((board[x] == who and board[y] == who) or (board[y] == who and board[z] == who) or (board[x] == who and board[z] == who)))\
                 and ((board[x] == "-" or board[y] == "-" or board[z] == "-"))):
@@ -83,7 +83,7 @@ class ComputerPlay:
         """
         checks each row for win
         """
-        def winRow(XorO):
+        def winRow(XorO: str):
             for row in range(1, 8, 3):
                 x = row
                 y = row + 1
@@ -93,7 +93,7 @@ class ComputerPlay:
         """
         checks each column for win
         """
-        def winCol(XorO):
+        def winCol(XorO: str):
             for column in range(1, 4): # column values: 1, 2, 3
                 x = column
                 y = column + 3
@@ -103,7 +103,7 @@ class ComputerPlay:
         """
         checks each diagonal for win
         """
-        def winDiag(XorO):
+        def winDiag(XorO: str):
             # diagonal 1
             x, y, z = 1, 5, 9
             ComputerPlay.Win.checkThree(x, y, z, XorO)
