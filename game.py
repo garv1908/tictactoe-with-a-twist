@@ -11,6 +11,7 @@ gameRunning = True
 winner = None
 player = "x"
 opponent = "o"
+whoGoesFirst = "computer"
 
 global pos
 
@@ -201,7 +202,8 @@ class ComputerPlay:
                 # play move that blocks fork and allows you to play 2 in a row
                 # if no such move exists, force opponent into defending by playing 2 in a row, without the player being able to play a fork
                 pass
-
+            pos = blockForkIndex
+            
 
     """
     outlines the "ideal move" process taking place for the computer's move
@@ -235,9 +237,7 @@ class ComputerPlay:
     def playMove(self):
         global pos
         if pos == -1 or board[pos] != "-":
-            pos = 4
-            if board[pos] != '-':
-                pos = random.randint(1, 9)
+            pos = random.randint(1, 9)
             print("didn't know what to play for perfection. generated random pos")
         if board[pos] == "-":
             board[pos] = currentPlayer
@@ -250,10 +250,10 @@ class ComputerPlay:
 
 def switchPlayer():
     global currentPlayer
-    if currentPlayer == "x":
-        currentPlayer = "o"
+    if currentPlayer == player:
+        currentPlayer = opponent
     else:
-        currentPlayer = "x"
+        currentPlayer = player
 
 class CheckWin:
     def checkRow(board) -> bool:
@@ -290,11 +290,27 @@ class CheckWin:
                 print("Your turn now, dear human.")
 
 def main():
-    printBoard(board)
-    while gameRunning:
-        playerInput(board)
-        if gameRunning:
-            ComputerPlay(board).play()
+    global player
+    global opponent
+    match whoGoesFirst:
+        case "player":
+            player = "x"
+            opponent = "o"
+            printBoard(board)
+            while gameRunning:
+                playerInput(board)
+                if gameRunning:
+                    ComputerPlay(board).play()
+        case "computer":
+            opponent = "x"
+            player = "o"
+            while gameRunning:
+                ComputerPlay(board).play()
+                if gameRunning:
+                    playerInput(board)
+            
+
+
             
 if __name__ == "__main__":
     main()
