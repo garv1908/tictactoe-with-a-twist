@@ -175,6 +175,26 @@ class ComputerPlay:
                         forkIndex = i
             pos = forkIndex
 
+        """
+        very similar to Fork.play()
+        sets cell to player XorO, checks for winCount with that play
+        if winCount >= 2, position is stored and set at the end
+        else, position stays at -1
+        """
+        def blockPlay():
+            global winCount
+            global pos
+            blockForkIndex = -1
+            for i in range(1, 10):
+                winCount = 0 # reset winCount every iteration
+                if board[i] == "-":
+                    board[i] = player # replace cell with player variable
+                    ComputerPlay.Block.play() # obtain new value for winCount
+                    board[i] = "-" # reset replaced cell
+                    if winCount >= 2:
+                        blockForkIndex = i
+            pos = blockForkIndex
+
 
     """
     outlines the "ideal move" process taking place for the computer's move
@@ -195,6 +215,10 @@ class ComputerPlay:
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
+            ComputerPlay.Fork.blockPlay()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
             ComputerPlay(board).playMove()
 
     """
@@ -204,7 +228,9 @@ class ComputerPlay:
     def playMove(self):
         global pos
         if pos == -1 or board[pos] != "-":
-            pos = random.randint(1, 9)
+            pos = 4
+            if board[pos] != '-':
+                pos = random.randint(1, 9)
             print("didn't know what to play for perfection. generated random pos")
         if board[pos] == "-":
             board[pos] = currentPlayer
