@@ -62,7 +62,7 @@ class ComputerPlay:
     Block: If the opponent has two in a row, the player must play the third themselves to block the opponent.
     Fork: Cause a scenario where the player has two ways to win (two non-blocked lines of 2).
     Blocking an opponent's fork: If there is only one possible fork for the opponent, the player should block it.
-        Otherwise, the player should block all forks in any way that simultaneously allows them to make two in a row.
+        Otherwise, that simultaneously allows them to make two in a row.
         Otherwise, the player should make a two in a row to force the opponent into defending, as long as it does not result in them producing a fork.
             For example, if "X" has two opposite corners and "O" has the center, "O" must not play a corner move to win.
             (Playing a corner move in this scenario produces a fork for "X" to win.)
@@ -185,6 +185,7 @@ class ComputerPlay:
             global winCount
             global pos
             blockForkIndex = -1
+            numForks = 0
             for i in range(1, 10):
                 winCount = 0 # reset winCount every iteration
                 if board[i] == "-":
@@ -193,7 +194,13 @@ class ComputerPlay:
                     board[i] = "-" # reset replaced cell
                     if winCount >= 2:
                         blockForkIndex = i
-            pos = blockForkIndex
+                        numForks += 1
+            if numForks == 1:
+                pos = blockForkIndex
+            elif numForks > 1:
+                # play move that blocks fork and allows you to play 2 in a row
+                # if no such move exists, force opponent into defending by playing 2 in a row, without the player being able to play a fork
+                pass
 
 
     """
