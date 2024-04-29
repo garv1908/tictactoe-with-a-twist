@@ -14,6 +14,9 @@ opponent = "o"
 
 global pos
 
+global winCount
+winCount = 0
+
 """
 takes player input, with a validation check.
 assigns move in array
@@ -73,12 +76,24 @@ class ComputerPlay:
         """
         checkThree takes in 3 positions x, y, z, and who -> who are we checking for
         the three positions are checked for a win, and sets pos to the empty cell, if found.
+            if there's 2 cells with 'who', return position of empty cell
+        # implementing new winCount variable for Fork functionality
         """
         def checkThree(x: int, y: int, z: int, who: str): # 'who' checks for either 'x' or 'o'
             global pos
+            global winCount
             if ((((board[x] == who and board[y] == who) or (board[y] == who and board[z] == who) or (board[x] == who and board[z] == who)))\
                 and ((board[x] == "-" or board[y] == "-" or board[z] == "-"))):
-                empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
+                # empty_index = x if board[x] == "-" else (y if board[y] == "-" else z)
+                if board[x] == "-":
+                    empty_index = x
+                    winCount += 1
+                elif board[y] == "-":
+                    empty_index = y
+                    winCount += 1
+                else:
+                    empty_index = z # z must be correct if others are false
+                    winCount += 1
                 pos = empty_index # sets pos to winning cell
         """
         checks each row for win
@@ -139,6 +154,10 @@ class ComputerPlay:
     class Fork:
         def checkFork():
             pass
+        def getWinPaths():
+            
+            pass
+
         def play():
             for i in range(1, 10):
                 if board[i] == "-":
