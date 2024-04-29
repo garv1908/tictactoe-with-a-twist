@@ -139,6 +139,13 @@ class ComputerPlay:
     class Fork:
         def checkFork():
             pass
+        def play():
+            for i in range(1, 10):
+                if board[i] == "-":
+                    board[i] = opponent
+                    # work here
+                    board[i] = "-"
+            pass
 
     def play(self):
         global pos
