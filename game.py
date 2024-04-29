@@ -138,7 +138,7 @@ class ComputerPlay:
             computer.winDiag(currentPlayer)
 
     """
-    Block class contains checkThree
+    Block class contains play()
     """
     class Block:
         def play():
@@ -150,22 +150,35 @@ class ComputerPlay:
             computer.winRow(player)
             computer.winCol(player)
             computer.winDiag(player)
+            # can't use computer.play() as it doesn't take input for which player is passed
 
+    """
+    Fork class contains play()
+    """
     class Fork:
-        def checkFork():
-            pass
-        def getWinPaths():
-            
-            pass
-
+        """
+        sets cell to opponent XorO, checks for winCount with that play
+        if winCount >= 2, position is stored and set at the end
+        else, position stays at -1
+        """
         def play():
+            global winCount
+            global pos
+            forkIndex = -1
             for i in range(1, 10):
+                winCount = 0 # reset winCount every iteration
                 if board[i] == "-":
-                    board[i] = opponent
-                    # work here
-                    board[i] = "-"
-            pass
+                    board[i] = opponent # replace cell with opponent variable
+                    ComputerPlay.Win.play() # obtain new value for winCount
+                    board[i] = "-" # reset replaced cell
+                    if winCount >= 2:
+                        forkIndex = i
+            pos = forkIndex
 
+
+    """
+    outlines the "ideal move" process taking place for the computer's move
+    """
     def play(self):
         global pos
         pos = -1
@@ -175,6 +188,10 @@ class ComputerPlay:
                 ComputerPlay(board).playMove()
                 break
             ComputerPlay(board).Block.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+            ComputerPlay.Fork.play() # do I need to specify (board)?
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
@@ -206,7 +223,6 @@ def switchPlayer():
         currentPlayer = "x"
 
 class CheckWin:
-
     def checkRow(board) -> bool:
         # if board[0] == currentPlayer and board[1] == currentPlayer and board[2] == currentPlayer or board[3] == currentPlayer and board[4] == currentPlayer and board[5] == currentPlayer or board[6] == currentPlayer and board[7] == currentPlayer and board[8] == currentPlayer:
         for i in range(1, 8, 3):
