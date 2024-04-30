@@ -258,8 +258,8 @@ class ComputerPlay:
         def play():
             global pos
             oppCorners = {1:9, 9:1, 3:7, 7:3}
-            for key, value in oppCorners:
-                if board[key] == player:
+            for key, value in oppCorners.items():
+                if board[key] == player and board[value] == "-":
                     pos = value
 
     """
@@ -272,6 +272,15 @@ class ComputerPlay:
                 if board[i] == "-":
                     pos = i
 
+    """
+    if an empty side is available, computer plays it
+    """
+    class EmptySide:
+        def play():
+            global pos
+            for i in range(2, 9, 2):
+                if board[i] == "-":
+                    pos = i
 
     """
     outlines the "ideal move" process taking place for the computer's move
@@ -315,6 +324,11 @@ class ComputerPlay:
                 ComputerPlay(board).playMove()
                 break
 
+            ComputerPlay.EmptySide.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
             ComputerPlay(board).playMove()
 
     """
@@ -324,9 +338,7 @@ class ComputerPlay:
     def playMove(self):
         global pos
         if pos == -1 or board[pos] != "-":
-            pos = 5
-            if board[pos] != "-":
-                pos = random.randint(1, 9)
+            pos = random.randint(1, 9)
             print("didn't know what to play for perfection. generated random pos")
         if board[pos] == "-":
             board[pos] = currentPlayer
