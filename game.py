@@ -262,6 +262,16 @@ class ComputerPlay:
                 if board[key] == player:
                     pos = value
 
+    """
+    if an empty corner is available, computer plays it
+    """
+    class EmptyCorner:
+        def play():
+            global pos
+            for i in {1, 3, 7, 9}:
+                if board[i] == "-":
+                    pos = i
+
 
     """
     outlines the "ideal move" process taking place for the computer's move
@@ -296,6 +306,11 @@ class ComputerPlay:
                 break
             
             ComputerPlay.OppositeCorner.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.EmptyCorner.play()
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
