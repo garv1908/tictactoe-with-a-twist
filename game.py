@@ -55,7 +55,6 @@ class ComputerPlay:
     
     def __init__(self, board):
         self.board = board
-        self.win = self.Win()
 
     """A player can play a perfect game of tic-tac-toe (to win or at least draw) if, each time it is their turn to play, they choose the first available move from the following list, as used in Newell and Simon's 1972 tic-tac-toe program.[19]
 
@@ -238,9 +237,7 @@ class ComputerPlay:
                     forceDefensePos.discard(el)
                 forceDefensePosEl = list(forceDefensePos)[0]
                 if pos == -1 and forceDefensePosEl != None:
-                    print(forceDefensePos)
                     pos = forceDefensePosEl
-                    print("set pos from forceDefensePos move")
     
     """
     if the centre of the board is free, we play the centre
@@ -248,7 +245,7 @@ class ComputerPlay:
     class Centre:
         def play():
             global pos
-            if board[5] == "-":
+            if board[5] == "-": # empty centre found
                 pos = 5
 
     """
@@ -257,9 +254,9 @@ class ComputerPlay:
     class OppositeCorner:
         def play():
             global pos
-            oppCorners = {1:9, 9:1, 3:7, 7:3}
+            oppCorners = {1:9, 9:1, 3:7, 7:3} # dictionary of corners and their corresponding opposites
             for key, value in oppCorners.items():
-                if board[key] == player and board[value] == "-":
+                if board[key] == player and board[value] == "-": # player played corner and corresponding empty corner found
                     pos = value
 
     """
@@ -268,8 +265,8 @@ class ComputerPlay:
     class EmptyCorner:
         def play():
             global pos
-            for i in {1, 3, 7, 9}:
-                if board[i] == "-":
+            for i in {1, 3, 7, 9}: # set of corners
+                if board[i] == "-": # empty corner found
                     pos = i
 
     """
@@ -278,8 +275,8 @@ class ComputerPlay:
     class EmptySide:
         def play():
             global pos
-            for i in range(2, 9, 2):
-                if board[i] == "-":
+            for i in range(2, 9, 2): # produces 2, 4, 6, 8, which is all sides
+                if board[i] == "-": # empty side found
                     pos = i
 
     """
@@ -299,7 +296,7 @@ class ComputerPlay:
                 ComputerPlay(board).playMove()
                 break
 
-            ComputerPlay.Fork.play() # do I need to specify (board)?
+            ComputerPlay.Fork.play()
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
@@ -358,7 +355,6 @@ def switchPlayer():
 
 class CheckWin:
     def checkRow(board) -> bool:
-        # if board[0] == currentPlayer and board[1] == currentPlayer and board[2] == currentPlayer or board[3] == currentPlayer and board[4] == currentPlayer and board[5] == currentPlayer or board[6] == currentPlayer and board[7] == currentPlayer and board[8] == currentPlayer:
         for i in range(1, 8, 3):
             if all(board[i + j] == currentPlayer for j in range(3)): 
                 return True
