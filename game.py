@@ -165,6 +165,8 @@ class ComputerPlay:
         def play():
             global winCount
             global pos
+            global forceDefensePos # records all pos that allow a 2 in a row for computer
+            forceDefensePos = set()
             forkIndex = -1
             for i in range(1, 10):
                 winCount = 0 # reset winCount every iteration
@@ -174,6 +176,8 @@ class ComputerPlay:
                     board[i] = "-" # reset replaced cell
                     if winCount >= 2:
                         forkIndex = i
+                    elif winCount == 1:
+                        forceDefensePos.add(i)
             pos = forkIndex
 
         """
@@ -185,10 +189,12 @@ class ComputerPlay:
         def blockPlay():
             global winCount
             global pos
-            blockForkIndex = -1
-            forkPos = set()
-            numForks = 0
 
+            global forceDefesePos # records all pos that allow a 2 in a row for computer
+            forkPos = set()
+            
+            blockForkIndex = -1
+            
             for i in range(1, 10):
                 winCount = 0 # reset winCount every iteration
                 if board[i] == "-":
@@ -198,16 +204,31 @@ class ComputerPlay:
                     if winCount >= 2:
                         blockForkIndex = i
                         forkPos.add(i)
-                        numForks += 1
+                        pos = -1
+                    elif winCount == 1: # means that the value of pos has changed due to Block.play()
+                        pos = -1 # resets pos to -1 in case ComputerPlay.Block.play() changes its value
+
+            numForks = len(forkPos)
             if numForks == 1:
                 pos = blockForkIndex
             elif numForks > 1:
-                # play move that blocks fork and allows you to play 2 in a row
-                # if no such move exists, force opponent into defending by playing 2 in a row, without the player being able to play a fork
-                pass
-            pos = blockForkIndex
-
-            
+                """ play move that blocks fork and allows you to play 2 in a row """
+                for i in forkPos:
+                    board[i] = opponent # replace cell with opponent variable
+                    ComputerPlay.Win.play() # sets pos to move that allows 2 in a row that coincides with elements in forkPos
+                    if pos != -1: # looks for change in pos caused by Win.play(), if change is seen, record 'i' value which causes change
+                        blockForkIndex = i
+                    board[i] = "-" # reset replaced cell
+                    pos = -1
+                if blockForkIndex != -1:
+                    pos = blockForkIndex
+                else:
+                    pos = -1 # reset pos if desired move is not found
+                """ if no such move exists, force opponent into defending by playing 2 in a row, without the player being able to play a fork """
+                if pos == -1 and forceDefensePos(0) != None:
+                    print(forceDefensePos)
+                    pos = forceDefensePos(0)
+                    print("set pos from forceDefensePos move")
 
     """
     outlines the "ideal move" process taking place for the computer's move
