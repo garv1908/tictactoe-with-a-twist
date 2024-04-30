@@ -11,7 +11,7 @@ gameRunning = True
 winner = None
 player = "x"
 opponent = "o"
-whoGoesFirst = "computer"
+whoGoesFirst = "player"
 
 global pos
 
@@ -186,7 +186,9 @@ class ComputerPlay:
             global winCount
             global pos
             blockForkIndex = -1
+            forkPos = set()
             numForks = 0
+
             for i in range(1, 10):
                 winCount = 0 # reset winCount every iteration
                 if board[i] == "-":
@@ -195,6 +197,7 @@ class ComputerPlay:
                     board[i] = "-" # reset replaced cell
                     if winCount >= 2:
                         blockForkIndex = i
+                        forkPos.add(i)
                         numForks += 1
             if numForks == 1:
                 pos = blockForkIndex
@@ -203,6 +206,7 @@ class ComputerPlay:
                 # if no such move exists, force opponent into defending by playing 2 in a row, without the player being able to play a fork
                 pass
             pos = blockForkIndex
+
             
 
     """
