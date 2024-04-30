@@ -241,7 +241,16 @@ class ComputerPlay:
                     print(forceDefensePos)
                     pos = forceDefensePosEl
                     print("set pos from forceDefensePos move")
-
+    
+    """
+    if the centre of the board is free, we play the centre
+    """
+    class Centre:
+        def play():
+            global pos
+            if board[5] == "-":
+                pos = 5
+    
     """
     outlines the "ideal move" process taking place for the computer's move
     """
@@ -253,18 +262,27 @@ class ComputerPlay:
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
+
             ComputerPlay(board).Block.play()
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
+
             ComputerPlay.Fork.play() # do I need to specify (board)?
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
+
             ComputerPlay.Fork.blockPlay()
             if pos != -1:
                 ComputerPlay(board).playMove()
                 break
+
+            ComputerPlay.Centre.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+            
             ComputerPlay(board).playMove()
 
     """
