@@ -250,7 +250,19 @@ class ComputerPlay:
             global pos
             if board[5] == "-":
                 pos = 5
-    
+
+    """
+    if the opponent has a cell in a corner, we play the opposite corner
+    """
+    class OppositeCorner:
+        def play():
+            global pos
+            oppCorners = {1:9, 9:1, 3:7, 7:3}
+            for key, value in oppCorners:
+                if board[key] == player:
+                    pos = value
+
+
     """
     outlines the "ideal move" process taking place for the computer's move
     """
@@ -283,6 +295,11 @@ class ComputerPlay:
                 ComputerPlay(board).playMove()
                 break
             
+            ComputerPlay.OppositeCorner.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
             ComputerPlay(board).playMove()
 
     """
