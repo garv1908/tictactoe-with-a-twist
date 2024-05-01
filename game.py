@@ -7,11 +7,12 @@ board = {
 }
 
 currentPlayer = "x"
-gameRunning = True
 winner = None
 player = "x"
 opponent = "o"
-whoGoesFirst = "player"
+whoGoesFirst = "computer" # "player" or "computer"
+
+global gameRunning
 
 global pos
 
@@ -44,9 +45,20 @@ def playerInput(board: dict):
 prints the board
 """
 def printBoard(board):
-    print(f"{board[1]}  |  {board[2]}  |  {board[3]}")
-    print(f"{board[4]}  |  {board[5]}  |  {board[6]}")
-    print(f"{board[7]}  |  {board[8]}  |  {board[9]}\n")
+    print(f"{board[1]}  |  {board[2]}  |  {board[3]}" + "               1  |  2  |  3")
+    print(f"{board[4]}  |  {board[5]}  |  {board[6]}" + "               4  |  5  |  6")
+    print(f"{board[7]}  |  {board[8]}  |  {board[9]}" + "               7  |  8  |  9" + "\n")
+
+"""
+resets the board for a replay
+"""
+def resetBoard():
+    global board
+    board = {
+        1: "-", 2: "-", 3: "-",
+        4: "-", 5: "-", 6: "-",
+        7: "-", 8: "-", 9: "-"
+    }
 
 """
 class initalised with self 
@@ -386,28 +398,51 @@ class CheckWin:
         elif currentPlayer != player:
                 print("Your turn now, dear human.")
 
+def replay() -> bool: # asks user if they want to play again
+    try:
+        replayInput = str(input("Do you wish to play again? (Y/N): ")).lower()
+        if replayInput != "y" and replayInput != "n":
+            print("Unknown value. Try again.")
+            return replay()
+    except:
+        print("Invalid input. Try again.")
+        return replay()
+    return replayInput == "y"
+    
+
 def main():
     global player
     global opponent
-    match whoGoesFirst:
-        case "player":
-            player = "x"
-            opponent = "o"
-            printBoard(board)
-            while gameRunning:
-                playerInput(board)
-                if gameRunning:
-                    ComputerPlay(board).play()
-        case "computer":
-            opponent = "x"
-            player = "o"
-            while gameRunning:
-                ComputerPlay(board).play()
-                if gameRunning:
+    global currentPlayer
+    global gameRunning
+    replayGame = True
+    while replayGame:
+        gameRunning = True
+        resetBoard()
+        match whoGoesFirst:
+            case "player":
+                player = "x"
+                opponent = "o"
+                currentPlayer = player
+                printBoard(board)
+                while gameRunning:
                     playerInput(board)
-            
+                    if gameRunning:
+                        ComputerPlay(board).play()
+            case "computer":
+                opponent = "x"
+                player = "o"
+                currentPlayer = opponent
+                while gameRunning:
+                    ComputerPlay(board).play()
+                    if gameRunning:
+                        playerInput(board)
+        replayGame = replay()
 
 
-            
+def end():
+    print("\nThank you for playing this lovely project!")
+
 if __name__ == "__main__":
     main()
+    end()
