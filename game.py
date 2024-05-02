@@ -1,10 +1,10 @@
 import random
 
-board = {
-    1: "-", 2: "-", 3: "-",
-    4: "-", 5: "-", 6: "-",
-    7: "-", 8: "-", 9: "-"
-}
+# board = {
+#     1: "-", 2: "-", 3: "-",
+#     4: "-", 5: "-", 6: "-",
+#     7: "-", 8: "-", 9: "-"
+# }
 
 currentPlayer = "x"
 winner = None
@@ -398,6 +398,29 @@ class CheckWin:
         elif currentPlayer != player:
                 print("Your turn now, dear human.")
 
+"""
+asks user who plays first
+"""
+def first():
+    global whoGoesFirst
+    choice = {
+        1: "player", 2: "computer"
+    }
+    try:
+        firstInput = int(input("\nWho goes first? (1 for player, 2 for computer): "))
+        if firstInput != 1 and firstInput != 2:
+            print("Invalid input. Try again.")
+            first()
+        elif firstInput == 1 or firstInput == 2:
+            whoGoesFirst = choice[firstInput]
+            print(f"The chosen first player is: {whoGoesFirst}\n")
+    except:
+        print("Invalid input. Try again.")
+        first()
+
+"""
+allows user to play again
+"""
 def replay() -> bool: # asks user if they want to play again
     try:
         replayInput = str(input("Do you wish to play again? (Y/N): ")).lower()
@@ -419,6 +442,7 @@ def main():
     while replayGame:
         gameRunning = True
         resetBoard()
+        first()
         match whoGoesFirst:
             case "player":
                 player = "x"
@@ -439,7 +463,10 @@ def main():
                         playerInput(board)
         replayGame = replay()
 
+    
 
+
+    
 def end():
     print("\nThank you for playing this lovely project!")
 
