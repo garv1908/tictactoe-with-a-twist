@@ -1,15 +1,8 @@
 import random
 
-# board = {
-#     1: "-", 2: "-", 3: "-",
-#     4: "-", 5: "-", 6: "-",
-#     7: "-", 8: "-", 9: "-"
-# }
-
 currentPlayer = "x"
 winner = None
-player = "x"
-opponent = "o"
+
 whoGoesFirst = "computer" # "player" or "computer"
 
 global gameRunning
@@ -341,6 +334,55 @@ class ComputerPlay:
             ComputerPlay(board).playMove()
 
     """
+    outlines the "NOT ideal move" process taking place for the computer's move
+    """
+    def reversePlay(self):
+        global pos
+        pos = -1
+        while pos == -1:
+            ComputerPlay.EmptySide.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.EmptyCorner.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+            
+            ComputerPlay.OppositeCorner.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.Centre.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.Fork.blockPlay()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.Fork.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay(board).Block.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay.Win.play()
+            if pos != -1:
+                ComputerPlay(board).playMove()
+                break
+
+            ComputerPlay(board).playMove()
+
+    """
     playMove handles the actual mechanics of the computer playing a move
     direct function of the ComputerPlay class
     """
@@ -389,14 +431,32 @@ class CheckWin:
     def checkWin(board):
         global player
         global gameRunning
+        global loseChallenge
         if CheckWin.checkRow(board) or CheckWin.checkColumn(board) or CheckWin.checkDiagonal(board):
-            print(f"{currentPlayer.capitalize()} wins!")
-            gameRunning = False
+            if not loseChallenge:
+                print(f"{currentPlayer.capitalize()} wins!\n")
+            if loseChallenge:
+                print(f"{currentPlayer.capitalize()} loses... maybe you'd be better at winning?\n")
+            gameRunning = False # game is over
         elif CheckWin.checkTie(board):
             print("It's a draw!")
             gameRunning = False
         elif currentPlayer != player:
                 print("Your turn now, dear human.")
+
+"""
+asks user if they wish to play the try to lose gamemode
+"""
+def challenge() -> bool:
+    try:
+        chal = str(input("Do you wish to play the try to LOSE gamemode? (Y/N): ")).lower()
+        if chal != "y" and chal != "n":
+            print("Unknown value. Try again.")
+            return challenge()
+    except:
+        print("Invalid input. Try again.")
+        return challenge()
+    return chal == "y"
 
 """
 asks user who plays first
@@ -419,9 +479,9 @@ def first():
         first()
 
 """
-allows user to play again
+asks if user wishes to play again
 """
-def replay() -> bool: # asks user if they want to play again
+def replay() -> bool:
     try:
         replayInput = str(input("Do you wish to play again? (Y/N): ")).lower()
         if replayInput != "y" and replayInput != "n":
@@ -438,10 +498,12 @@ def main():
     global opponent
     global currentPlayer
     global gameRunning
+    global loseChallenge
     replayGame = True
     while replayGame:
         gameRunning = True
         resetBoard()
+        loseChallenge = challenge()
         first()
         match whoGoesFirst:
             case "player":
@@ -452,13 +514,19 @@ def main():
                 while gameRunning:
                     playerInput(board)
                     if gameRunning:
-                        ComputerPlay(board).play()
+                        if loseChallenge:
+                            ComputerPlay(board).reversePlay()
+                        else:
+                            ComputerPlay(board).play()
             case "computer":
                 opponent = "x"
                 player = "o"
                 currentPlayer = opponent
                 while gameRunning:
-                    ComputerPlay(board).play()
+                    if loseChallenge:
+                        ComputerPlay(board).reversePlay()
+                    else:
+                        ComputerPlay(board).play()
                     if gameRunning:
                         playerInput(board)
         replayGame = replay()
