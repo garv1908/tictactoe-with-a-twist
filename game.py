@@ -436,7 +436,10 @@ class CheckWin:
             if not loseChallenge:
                 print(f"{currentPlayer.capitalize()} wins!\n")
             if loseChallenge:
-                print(f"{currentPlayer.capitalize()} loses... maybe you'd be better at winning?\n")
+                if currentPlayer == player:
+                    print(f"{currentPlayer.capitalize()} loses... maybe you'd be better at winning?\n")
+                elif currentPlayer == opponent:
+                    print(f"{currentPlayer.capitalize()} loses... I didn't know you were good at losing, player!\n")
             gameRunning = False # game is over
         elif CheckWin.checkTie(board):
             print("It's a draw!")
