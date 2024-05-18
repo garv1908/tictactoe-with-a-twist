@@ -1,4 +1,5 @@
 import random
+import time
 
 currentPlayer = "x"
 winner = None
@@ -393,7 +394,11 @@ class ComputerPlay:
             print("didn't know what to play for perfection. generated random pos")
         if board[pos] == "-":
             board[pos] = currentPlayer
-            print("Computer thinking: ...aha!")
+            print("Computer thinking: ", end='')
+            x = random.randint(1,3)
+            time.sleep(x)
+            print("...aha!")
+            time.sleep(1)
             printBoard(board)
             CheckWin.checkWin(board)
             switchPlayer()
